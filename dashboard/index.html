@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Token Radar — pre-token protocols ranked by implied value</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="top">
+  <p class="kicker">MAKE.FUN &middot; TOKEN LAUNCH RADAR &middot; SNAPSHOT 14 NOV 2026</p>
+  <h1>Token Radar</h1>
+  <p class="sub">Every protocol that <strong>records no token</strong> and is a launch candidate, ranked by what its token would be worth if the protocol's record stayed as it is. This is the entry's own claim — not a prediction of whether or when a token is issued.</p>
+  <div class="stats" id="stats" aria-live="polite"></div>
+</header>
+
+<section class="model" id="model">
+  <h2>How the value is scored <span class="tag">model radar-2</span></h2>
+  <p class="formula">implied value = TVL &times; 0.35 &times; category &times; growth &times; maturity &times; breadth</p>
+  <ul>
+    <li><strong>TVL &times; 0.35</strong> — established DeFi governance tokens commonly trade at a fully-diluted value of roughly a fifth to a half of TVL; 0.35 is the middle of that band.</li>
+    <li><strong>Category</strong> — 1.00 normally; 0.60 for a wrapped, staked or bridged product (a receipt for an asset that already exists, so a new token captures less new value); 0.80 for a centralised exchange; 0.90 when no category is recorded; &times;0.75 more when the name ends in a version marker. Exchanges and wrapped, staked or bridged products are not ranked at all — except the two the watchlist itself names — because their TVL is custodial balances or a claim on an asset that already exists; they are listed below, with their reasons.</li>
+    <li><strong>Growth</strong> — 1 + clamp(7-day TVL change, &minus;50%, +150%) &divide; 100 &times; 0.50. One week's swing is noisy, so the extremes are clamped; an unreported change counts as 0.</li>
+    <li><strong>Maturity</strong> — 0.55 + min(age, 1095 days) &divide; 1095 &times; 0.45. A protocol that has run for years with no token has proven demand; a brand-new one is unproven. Age unknown: the snapshot's own median pre-token age (516 days).</li>
+    <li><strong>Breadth</strong> — 1.00 on one chain, 1.05 on two or three, 1.10 on four or more. Multi-chain deployment is a weak signal of real usage, worth a tenth at most.</li>
+  </ul>
+  <p class="note">No protocol name is ever special-cased: the same formula scores every row, from the snapshot's own figures alone. A protocol is called pre-token only because its record carries no market cap, no CoinGecko id and no symbol — the record is not proof it has no token.</p>
+</section>
+
+<section class="controls" aria-label="Board controls">
+  <label>Search <input id="q" type="search" placeholder="Name or slug…" autocomplete="off"></label>
+  <label>Category <select id="cat"><option value="">All categories</option></select></label>
+  <label>Chain <select id="chain"><option value="">All chains</option></select></label>
+  <label>View
+    <select id="view">
+      <option value="board">All pre-token (board)</option>
+      <option value="watchlist">Watchlist only</option>
+      <option value="live">Already has a token</option>
+    </select>
+  </label>
+  <label>Sort
+    <select id="sort">
+      <option value="value">Implied value</option>
+      <option value="tvl">TVL</option>
+      <option value="growth">7-day change</option>
+      <option value="age">Age</option>
+      <option value="name">Name A–Z</option>
+    </select>
+  </label>
+</section>
+
+<section id="detail" class="detail" hidden></section>
+
+<main>
+  <p class="count" id="count" aria-live="polite"></p>
+  <table id="board">
+    <thead><tr>
+      <th class="num">#</th><th>Protocol</th><th>Category</th><th>Chains</th>
+      <th class="num">TVL</th><th class="num">7d</th><th class="num">Age</th><th class="num">Implied value</th>
+    </tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+  <p class="empty" id="empty" hidden>No protocol matches this filter.</p>
+</main>
+
+<section class="live" id="excludedbox">
+  <h2>Not ranked as launches — and why</h2>
+  <p class="note">These protocols record no token, but they are not launch candidates: an exchange's TVL is custodial balances, and a wrapped, staked or bridged product is a receipt for an asset that already exists. Their TVL is shown so the omission is checkable, not hidden.</p>
+  <table id="excludedtable">
+    <thead><tr>
+      <th>Protocol</th><th>Category</th><th class="num">TVL</th><th>Why it is not ranked</th>
+    </tr></thead>
+    <tbody id="excludedrows"></tbody>
+  </table>
+</section>
+
+<section class="live" id="livebox">
+  <h2>Already has a token — shown for comparison, never ranked</h2>
+  <p class="note">These protocols record a token that already trades, so the board shows the market's own capitalisation, not a model's implied value. They are not launch candidates.</p>
+  <table id="livetable">
+    <thead><tr>
+      <th>Protocol</th><th>Category</th><th>Chains</th><th class="num">TVL</th><th class="num">Market cap</th><th class="num">7d</th>
+    </tr></thead>
+    <tbody id="liverows"></tbody>
+  </table>
+</section>
+
+<footer>
+  <p>Data: DefiLlama protocol snapshot, 14 November 2026. Implied values are this entry's own claim. Farm plans tell the reader how to use each protocol genuinely and track the position; they promise no token and no airdrop.</p>
+</footer>
+<script src="../data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
